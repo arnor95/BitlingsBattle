@@ -1,0 +1,104 @@
+Yes, as of May 2025, you can generate images using GPT-4o through OpenAI's API. OpenAI has introduced a new model called gpt-image-1, which brings native image generation capabilities to GPT-4o, succeeding the previous DALL·E 3 model.
+PiAPI
++3
+Wikipedia
++3
+The Verge
++3
+
+🖼️ GPT-4o Image Generation API Overview
+Model Name: gpt-image-1
+
+API Endpoint: https://api.openai.com/v1/images/generations
+
+Capabilities:
+
+Generates high-quality images from text prompts.
+
+Supports various artistic styles and resolutions.
+
+Accurately renders text within images.
+
+Leverages GPT-4o's multimodal understanding for context-aware image generation.
+Wikipedia
++2
+Cursor IDE
++2
+The Verge
++2
+OpenAI
++1
+The Verge
++1
+Cursor IDE
+
+💰 Pricing Details
+OpenAI has structured the pricing for gpt-image-1 based on the type of tokens used:
+Wikipedia
++3
+OpenAI
++3
+The Verge
++3
+
+Text Input Tokens: $5 per 1 million tokens
+
+Image Input Tokens: $10 per 1 million tokens
+
+Image Output Tokens: $40 per 1 million tokens
+OpenAI
+
+In practical terms, this translates to approximately:
+
+Low-Quality Image (1024×1024): ~$0.02 per image
+
+Medium-Quality Image: ~$0.07 per image
+
+High-Quality Image: ~$0.19 per image
+OpenAI
+
+For detailed pricing by image quality and size, refer to OpenAI's official documentation. 
+OpenAI
+
+🚀 Getting Started with Image Generation
+To generate an image using the API, you can send a POST request as follows:
+
+bash
+Copy
+Edit
+curl https://api.openai.com/v1/images/generations \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-image-1",
+    "prompt": "a futuristic city floating in the clouds",
+    "n": 1,
+    "size": "1024x1024"
+  }'
+Note: Replace YOUR_API_KEY with your actual OpenAI API key.
+
+🔒 Safety and Moderation
+The gpt-image-1 model incorporates safety measures similar to those in GPT-4o's image generation within ChatGPT. This includes:
+PiAPI
++3
+OpenAI
++3
+The Verge
++3
+
+Content Moderation: The moderation parameter can be set to auto (default) for standard filtering or low for less restrictive filtering.
+
+Metadata Inclusion: Generated images include C2PA metadata to ensure content authenticity.
+OpenAI
++1
+Wikipedia
++1
+
+These safeguards help prevent the generation of harmful or inappropriate images.
+
+📌 Summary
+OpenAI's introduction of the gpt-image-1 model allows developers to harness GPT-4o's advanced image generation capabilities directly through the API. This enables the creation of high-quality, context-aware images for various applications, from design tools to content creation platforms.
+
+If you need assistance with integrating this API into your project or have further questions, feel free to ask!
+
+
