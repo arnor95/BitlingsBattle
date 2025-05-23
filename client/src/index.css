@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+  --background: 0 0% 96.1%; /* #F5F5F5 */
+  --foreground: 0 0% 13%; /* #212121 */
+  
+  --card: 0 0% 100%; /* #FFFFFF */
+  --card-foreground: 0 0% 13%; /* #212121 */
+  
+  --popover: 0 0% 100%; /* #FFFFFF */
+  --popover-foreground: 0 0% 13%; /* #212121 */
+  
+  --primary: 260 60% 45.1%; /* #5E35B1 */
+  --primary-foreground: 0 0% 100%; /* #FFFFFF */
+  
+  --secondary: 15 100% 56.5%; /* #FF5722 */
+  --secondary-foreground: 0 0% 100%; /* #FFFFFF */
+  
+  --muted: 0 0% 96.1%; /* #F5F5F5 */
+  --muted-foreground: 0 0% 46%; /* #757575 */
+  
+  --accent: 187 100% 41.6%; /* #00BCD4 */
+  --accent-foreground: 0 0% 100%; /* #FFFFFF */
+  
+  --destructive: 0 84.2% 60.2%; /* #FF5252 */
+  --destructive-foreground: 0 0% 98%; /* #FAFAFA */
+  
+  --border: 0 0% 89.8%; /* #E5E5E5 */
+  --input: 0 0% 89.8%; /* #E5E5E5 */
+  --ring: 260 60% 45.1%; /* #5E35B1 */
+  
+  --radius: 0.5rem;
+
+  /* Game type colors */
+  --fire: 15 100% 56.5%; /* #FF5722 */
+  --water: 207 90% 54%; /* #2196F3 */
+  --grass: 122 39% 49%; /* #4CAF50 */
+  --electric: 54 100% 62%; /* #FFEB3B */
+  --psychic: 291 64% 42%; /* #9C27B0 */
+  --ice: 187 100% 41.6%; /* #00BCD4 */
+  --ghost: 262 51% 55%; /* #7E57C2 */
+  --normal: 0 0% 62%; /* #9E9E9E */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  /* Pixel art styled borders */
+  .pixel-border {
+    box-shadow: 0 -4px 0 0 #212121, 
+                0 4px 0 0 #212121, 
+                -4px 0 0 0 #212121, 
+                4px 0 0 0 #212121;
+  }
+  
+  /* Retro scanlines effect */
+  .scanlines {
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0) 50%,
+      rgba(0, 0, 0, 0.2) 50%,
+      rgba(0, 0, 0, 0.2)
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+  }
+  
+  /* Dot matrix background */
+  .dot-matrix {
+    background-image: radial-gradient(#424242 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+
+  /* Bitling type styles */
+  .type-fire {
+    @apply bg-[#FF5722] text-white;
+  }
+  .type-water {
+    @apply bg-[#2196F3] text-white;
+  }
+  .type-grass {
+    @apply bg-[#4CAF50] text-white;
+  }
+  .type-electric {
+    @apply bg-[#FFEB3B] text-gray-900;
+  }
+  .type-psychic {
+    @apply bg-[#9C27B0] text-white;
+  }
+  .type-ice {
+    @apply bg-[#00BCD4] text-white;
+  }
+  .type-ghost {
+    @apply bg-[#7E57C2] text-white;
+  }
+  .type-normal {
+    @apply bg-[#9E9E9E] text-white;
+  }
+
+  /* Stat bar colors */
+  .stat-hp {
+    @apply bg-green-500;
+  }
+  .stat-attack {
+    @apply bg-red-500;
+  }
+  .stat-defense {
+    @apply bg-blue-500;
+  }
+  .stat-speed {
+    @apply bg-yellow-500;
+  }
+
+  /* Animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes battle-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+  }
+  
+  @keyframes health-decrease {
+    0% { width: 100%; }
+    100% { width: var(--final-width); }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-battle-shake {
+    animation: battle-shake 0.5s;
+  }
+  
+  .health-decrease {
+    animation: health-decrease 1s forwards;
+  }
+}

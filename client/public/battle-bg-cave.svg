@@ -1,0 +1,62 @@
+<svg width="1200" height="400" viewBox="0 0 1200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark cave background -->
+  <rect width="1200" height="400" fill="#2C2C2C"/>
+  
+  <!-- Cave opening (gradient from dark inside to slightly lighter) -->
+  <ellipse cx="600" cy="200" rx="500" ry="300" fill="url(#caveGradient)"/>
+  
+  <!-- Cave walls texture -->
+  <g opacity="0.7">
+    <path d="M200 100C200 100 150 120 170 150C190 180 150 200 130 190C110 180 100 220 130 240C160 260 150 300 120 320C90 340 110 380 150 390C190 400 250 380 290 400" stroke="#3D3D3D" stroke-width="8"/>
+    <path d="M1000 100C1000 100 1050 120 1030 150C1010 180 1050 200 1070 190C1090 180 1100 220 1070 240C1040 260 1050 300 1080 320C1110 340 1090 380 1050 390C1010 400 950 380 910 400" stroke="#3D3D3D" stroke-width="8"/>
+    
+    <path d="M300 50C300 50 250 80 270 120C290 160 240 190 220 170C200 150 220 200 250 220C280 240 270 290 240 320C210 350 250 380 280 390" stroke="#4A4A4A" stroke-width="6"/>
+    <path d="M900 50C900 50 950 80 930 120C910 160 960 190 980 170C1000 150 980 200 950 220C920 240 930 290 960 320C990 350 950 380 920 390" stroke="#4A4A4A" stroke-width="6"/>
+    
+    <path d="M400 80C400 80 380 100 390 130C400 160 370 180 360 160C350 140 380 190 400 200C420 210 390 260 370 290C350 320 390 360 420 370" stroke="#555555" stroke-width="5"/>
+    <path d="M800 80C800 80 820 100 810 130C800 160 830 180 840 160C850 140 820 190 800 200C780 210 810 260 830 290C850 320 810 360 780 370" stroke="#555555" stroke-width="5"/>
+  </g>
+  
+  <!-- Stalagmites (from ground up) -->
+  <path d="M250 400L270 340L290 400" fill="#3D3D3D"/>
+  <path d="M350 400L380 310L410 400" fill="#3D3D3D"/>
+  <path d="M500 400L520 320L540 400" fill="#3D3D3D"/>
+  <path d="M650 400L680 280L710 400" fill="#3D3D3D"/>
+  <path d="M800 400L830 330L860 400" fill="#3D3D3D"/>
+  <path d="M950 400L980 300L1010 400" fill="#3D3D3D"/>
+  
+  <!-- Stalactites (from ceiling down) -->
+  <path d="M200 0L220 60L240 0" fill="#3D3D3D"/>
+  <path d="M400 0L430 80L460 0" fill="#3D3D3D"/>
+  <path d="M550 0L580 100L610 0" fill="#3D3D3D"/>
+  <path d="M700 0L730 70L760 0" fill="#3D3D3D"/>
+  <path d="M850 0L880 90L910 0" fill="#3D3D3D"/>
+  <path d="M1000 0L1030 60L1060 0" fill="#3D3D3D"/>
+  
+  <!-- Cave floor -->
+  <path d="M0 350C50 340 100 360 150 350C200 340 250 360 300 350C350 340 400 360 450 350C500 340 550 360 600 350C650 340 700 360 750 350C800 340 850 360 900 350C950 340 1000 360 1050 350C1100 340 1150 360 1200 350L1200 400L0 400Z" fill="#4A4A4A"/>
+  
+  <!-- Small crystals and details -->
+  <g fill="#7B68EE" opacity="0.7">
+    <path d="M280 250L290 230L300 250L290 270Z"/>
+    <path d="M530 280L545 250L560 280L545 310Z"/>
+    <path d="M820 260L835 240L850 260L835 280Z"/>
+  </g>
+  
+  <g fill="#4682B4" opacity="0.6">
+    <path d="M380 200L390 180L400 200L390 220Z"/>
+    <path d="M630 230L645 200L660 230L645 260Z"/>
+    <path d="M880 210L895 190L910 210L895 230Z"/>
+  </g>
+  
+  <!-- Water puddle reflection -->
+  <ellipse cx="600" cy="380" rx="100" ry="15" fill="#1E3B50" opacity="0.6"/>
+  
+  <!-- Defs for gradients -->
+  <defs>
+    <radialGradient id="caveGradient" cx="0.5" cy="0.5" r="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0.1" stop-color="#1A1A1A"/>
+      <stop offset="0.9" stop-color="#2C2C2C"/>
+    </radialGradient>
+  </defs>
+</svg>
