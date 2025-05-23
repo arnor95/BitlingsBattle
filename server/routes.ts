@@ -105,7 +105,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         response_format: { type: "json_object" }
       });
       
-      const result = JSON.parse(response.choices[0].message.content || '{}');
+      const content = response.choices[0]?.message?.content || '{}';
+      const result = JSON.parse(content);
       res.json(result);
     } catch (error) {
       console.error("Error generating stats:", error);
@@ -285,7 +286,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         response_format: { type: "json_object" }
       });
       
-      const stats = JSON.parse(response.choices[0].message.content);
+      const content = response.choices[0]?.message?.content || '{}';
+      const stats = JSON.parse(content);
       
       // Save stats to database
       await storage.createBitlingStats({
