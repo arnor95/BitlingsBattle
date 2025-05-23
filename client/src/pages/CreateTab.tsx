@@ -133,9 +133,16 @@ export default function CreateTab({ className = "" }: CreateTabProps) {
         
         if (statsData) {
           // Update the bitling with the generated data
+          // Convert string types to BitlingType enum values
+          const validatedTypes = statsData.types.map(type => {
+            // Ensure the type is lowercase and a valid BitlingType
+            const lowerType = type.toLowerCase() as BitlingType;
+            return lowerType;
+          });
+          
           setBitling((prev) => ({ 
             ...prev, 
-            types: statsData.types,
+            types: validatedTypes,
             stats: statsData.stats,
             moves: statsData.moves,
             description: statsData.description,
