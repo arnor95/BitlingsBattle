@@ -59,38 +59,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
         messages: [
           {
             role: "system",
-            content: "You are a game designer specializing in creating fantasy creature stats and abilities for a Pokémon-like game. Generate balanced stats and thematically appropriate abilities based on the creature's appearance and description."
+            content: `You are a game designer specializing in creating fantasy creature stats and abilities for a Pokémon-like game called Bitlings. Generate balanced stats and thematically appropriate abilities based on the creature's appearance and description.
+
+Available types: normal, fire, water, electric, grass, ice, fighting, poison, ground, flying, psychic, bug, rock, ghost, dragon, dark, steel.
+
+Each Bitling must have:
+1. PRIMARY type and SECONDARY type (use normal as secondary if unsure)
+2. Level-appropriate base stats for a level 1 creature
+3. A set of moves learned at different levels (at least 6 moves)
+
+For moves, specify:
+- Name
+- Type (matching one of the Bitling's types when possible)
+- Power (0 for status moves, 40-120 for damage moves)
+- Accuracy (0-100 percentage)
+- PP (5-30 points)
+- Max PP (same as PP)
+- Description
+- Category ("physical", "special", or "status")
+- Level learned (from level 1 to 36)`
           },
           {
             role: "user",
             content: [
               {
                 type: "text",
-                text: `Create stats and abilities for a creature named "${name}" with this description: "${description}". 
-                Return the data in this JSON format:
+                text: `Create detailed stats and abilities for a Bitling named "${name}" with this description: "${description}". 
+                
+                Analyze the image carefully and return the data in this JSON format:
                 {
                   "types": ["primary_type", "secondary_type"],
                   "stats": {
-                    "hp": 1-100,
-                    "attack": 1-100,
-                    "defense": 1-100,
-                    "speed": 1-100
+                    "hp": 30-50,
+                    "attack": 30-50,
+                    "defense": 30-50,
+                    "speed": 30-50
                   },
+                  "description": "A brief description based on appearance (1-2 sentences)",
+                  "behavior": "How the Bitling behaves in its natural habitat",
                   "moves": [
                     {
-                      "name": "MOVE_NAME",
-                      "type": "move_type",
-                      "power": 1-100,
+                      "name": "Move Name",
+                      "type": "one of the available types",
+                      "power": 0-120 (0 for status moves),
+                      "accuracy": 0-100,
                       "pp": 5-30,
-                      "maxPp": 5-30,
-                      "description": "Brief description of what the move does"
+                      "maxPp": same as pp,
+                      "description": "Brief description of the move",
+                      "category": "physical/special/status",
+                      "levelLearned": level at which this move is learned
                     },
-                    ...3 more moves
+                    ... at least 6 moves learned at different levels
                   ]
                 }
                 
-                For types, use: fire, water, grass, electric, psychic, ice, ghost, or normal.
-                Make sure the types, stats, and moves fit thematically with the creature's description.`
+                Choose types from: normal, fire, water, electric, grass, ice, fighting, poison, ground, flying, psychic, bug, rock, ghost, dragon, dark, steel.
+                
+                Make sure the types, stats, and moves fit thematically with the Bitling's appearance and description. Ensure moves are learned at increasing levels (1, 5, 10, 15, 20, 25, etc.)`
               },
               {
                 type: "image_url",
@@ -114,12 +139,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
-  // Create a new Bitling
+  // Create a new Bitling with types, stats and moves
   app.post("/api/bitlings", async (req: Request, res: Response) => {
     try {
-      const validatedData = insertBitlingSchema.parse(req.body);
-      const bitling = await storage.createBitling(validatedData);
-      res.status(201).json(bitling);
+      const { types, stats, moves, ...bitlingData } = req.body;
+      
+      // Validate the basic Bitling data first
+      const validatedData = insertBitlingSchema.parse(bitlingData);
+      
+      // Create the Bitling
+      const bitling = await storage.createBitling({
+        ...validatedData,
+        types: types || ["normal", "normal"] // Default to normal type if none provided
+      });
+      
+      // If stats and moves are provided, create them too
+      if (stats && moves && Array.isArray(moves)) {
+        // Format moves to match our schema
+        const formattedMoves = moves.map(move => ({
+          name: move.name,
+          type: move.type || "normal",
+          power: move.power || 0,
+          pp: move.pp || 10,
+          maxPp: move.maxPp || move.pp || 10,
+          description: move.description || "",
+          accuracy: move.accuracy || 100,
+          levelLearned: move.levelLearned || 1,
+          category: move.category || "physical"
+        }));
+        
+        // Create Bitling stats with moves
+        await storage.createBitlingStats({
+          bitlingId: bitling.id,
+          stats: stats,
+          moves: formattedMoves
+        });
+        
+        // Get the complete Bitling with stats and return it
+        const bitlingWithStats = await storage.getBitlingById(bitling.id);
+        res.status(201).json(bitlingWithStats);
+      } else {
+        res.status(201).json(bitling);
+      }
     } catch (error) {
       console.error("Error creating bitling:", error);
       res.status(400).json({ message: error instanceof Error ? error.message : "Failed to create bitling" });

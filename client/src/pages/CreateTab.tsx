@@ -3,9 +3,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { generateBitlingImage } from "@/lib/openai";
+import { generateBitlingImage, generateBitlingStats } from "@/lib/openai";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { BitlingType } from "@shared/schema";
 
 interface CreateTabProps {
   className?: string;

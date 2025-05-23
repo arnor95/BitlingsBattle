@@ -3,7 +3,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 // Bitling type
-export type BitlingType = "fire" | "water" | "grass" | "electric" | "psychic" | "ice" | "ghost" | "normal";
+export type BitlingType = "normal" | "fire" | "water" | "electric" | "grass" | "ice" | "fighting" | "poison" | "ground" | "flying" | "psychic" | "bug" | "rock" | "ghost" | "dragon" | "dark" | "steel";
 
 // Bitling status
 export type BitlingStatus = "proposed" | "voting" | "accepted" | "inGame";
@@ -12,10 +12,13 @@ export type BitlingStatus = "proposed" | "voting" | "accepted" | "inGame";
 export interface Move {
   name: string;
   type: BitlingType;
-  power: number;
+  power: number; // 0 for status moves
   pp: number;
   maxPp: number;
   description: string;
+  accuracy: number; // 0-100 accuracy percentage
+  levelLearned: number; // Level at which the move is learned
+  category: "physical" | "special" | "status"; // Physical, Special, or Status move
 }
 
 // Stats structure
