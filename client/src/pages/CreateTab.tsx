@@ -12,11 +12,35 @@ interface CreateTabProps {
   className?: string;
 }
 
+interface BitlingStats {
+  hp: number;
+  attack: number;
+  defense: number;
+  speed: number;
+}
+
+interface BitlingMove {
+  name: string;
+  type: BitlingType;
+  power: number;
+  pp: number;
+  maxPp: number;
+  description: string;
+  accuracy: number;
+  levelLearned: number;
+  category: "physical" | "special" | "status";
+}
+
 interface BitlingFormData {
   name: string;
   prompt: string;
   creatorHandle: string;
   imageUrl?: string;
+  types?: BitlingType[];
+  stats?: BitlingStats;
+  moves?: BitlingMove[];
+  description?: string;
+  behavior?: string;
 }
 
 export default function CreateTab({ className = "" }: CreateTabProps) {
@@ -30,7 +54,17 @@ export default function CreateTab({ className = "" }: CreateTabProps) {
 
   const submitBitlingMutation = useMutation({
     mutationFn: async (data: BitlingFormData) => {
-      return await apiRequest("POST", "/api/bitlings", data);
+      const { types, stats, moves, description, behavior, ...basicData } = data;
+      
+      // Submit both basic data and the AI-generated details
+      return await apiRequest("POST", "/api/bitlings", {
+        ...basicData,
+        types,
+        stats,
+        moves,
+        description,
+        behavior
+      });
     },
     onSuccess: () => {
       toast({
@@ -61,6 +95,8 @@ export default function CreateTab({ className = "" }: CreateTabProps) {
     setBitling((prev) => ({ ...prev, [name]: value }));
   };
 
+  const [isGeneratingStats, setIsGeneratingStats] = useState(false);
+  
   const handleGenerateBitling = async () => {
     if (!bitling.prompt) {
       toast({
@@ -73,6 +109,7 @@ export default function CreateTab({ className = "" }: CreateTabProps) {
 
     try {
       setIsGenerating(true);
+      // Step 1: Generate the Bitling image
       const imageData = await generateBitlingImage(bitling.prompt);
       
       if (imageData) {
@@ -82,9 +119,34 @@ export default function CreateTab({ className = "" }: CreateTabProps) {
         }));
         
         toast({
-          title: "Bitling Generated!",
-          description: "Your Bitling image has been created successfully.",
+          title: "Bitling Image Generated!",
+          description: "Now generating types, stats, and abilities...",
         });
+        
+        // Step 2: Generate the Bitling stats, types and moves
+        setIsGeneratingStats(true);
+        const statsData = await generateBitlingStats(
+          imageData.url,
+          bitling.name || "Unnamed Bitling",
+          bitling.prompt
+        );
+        
+        if (statsData) {
+          // Update the bitling with the generated data
+          setBitling((prev) => ({ 
+            ...prev, 
+            types: statsData.types,
+            stats: statsData.stats,
+            moves: statsData.moves,
+            description: statsData.description,
+            behavior: statsData.behavior
+          }));
+          
+          toast({
+            title: "Bitling Complete!",
+            description: `Created a ${statsData.types[0]} type Bitling with unique abilities!`,
+          });
+        }
       }
     } catch (error) {
       toast({
@@ -94,6 +156,7 @@ export default function CreateTab({ className = "" }: CreateTabProps) {
       });
     } finally {
       setIsGenerating(false);
+      setIsGeneratingStats(false);
     }
   };
 
@@ -262,9 +325,20 @@ export default function CreateTab({ className = "" }: CreateTabProps) {
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-1 mb-2">
-                  <span className="inline-block px-2 py-1 bg-gray-200 rounded-full text-xs font-medium text-gray-800">
-                    No Type Yet
-                  </span>
+                  {bitling.types && bitling.types.length > 0 ? (
+                    bitling.types.map((type, index) => (
+                      <span 
+                        key={index}
+                        className={`inline-block px-2 py-1 bg-${type.toLowerCase()} text-white rounded-full text-xs font-medium`}
+                      >
+                        {type.toUpperCase()}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="inline-block px-2 py-1 bg-gray-200 rounded-full text-xs font-medium text-gray-800">
+                      No Type Yet
+                    </span>
+                  )}
                 </div>
                 <p className="text-xs text-gray-700">
                   {bitling.prompt || "No description yet..."}

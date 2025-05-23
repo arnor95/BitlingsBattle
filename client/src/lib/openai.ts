@@ -32,19 +32,42 @@ export async function generateBitlingImage(prompt: string): Promise<ImageGenerat
   }
 }
 
+interface BitlingGenerationResponse {
+  types: string[];
+  stats: {
+    hp: number;
+    attack: number;
+    defense: number;
+    speed: number;
+  };
+  moves: Array<{
+    name: string;
+    type: string; 
+    power: number;
+    accuracy: number;
+    pp: number;
+    maxPp: number;
+    description: string;
+    category: "physical" | "special" | "status";
+    levelLearned: number;
+  }>;
+  description: string;
+  behavior: string;
+}
+
 /**
- * Generates Bitling stats and abilities using OpenAI GPT-4 via our backend API
+ * Generates Bitling stats, types, and moves using OpenAI GPT-4o via our backend API
  * 
  * @param imageUrl URL of the Bitling image
  * @param name Name of the Bitling
  * @param description Description of the Bitling
- * @returns Promise with the generated stats and abilities
+ * @returns Promise with the generated stats, types, and moves
  */
 export async function generateBitlingStats(
   imageUrl: string,
   name: string,
   description: string
-) {
+): Promise<BitlingGenerationResponse> {
   try {
     const response = await fetch("/api/generate-stats", {
       method: "POST",
