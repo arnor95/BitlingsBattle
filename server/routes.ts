@@ -23,12 +23,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Enhance the prompt for better results
       const enhancedPrompt = `A cute fantasy creature character design: ${prompt}. Pixel art style, game sprite, vibrant colors, white background, centered composition.`;
       
-      // Use the newer gpt-image-1 model which is part of GPT-4o
+      // Use DALL-E 3, which is known to be reliable
       const response = await openai.images.generate({
-        model: "gpt-image-1",
+        model: "dall-e-3",
         prompt: enhancedPrompt,
         n: 1,
-        size: "1024x1024"
+        size: "1024x1024",
+        quality: "standard",
+        style: "vivid"
       });
       
       if (response.data && response.data.length > 0 && response.data[0].url) {
