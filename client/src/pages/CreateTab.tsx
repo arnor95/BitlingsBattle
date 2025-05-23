@@ -132,26 +132,46 @@ export default function CreateTab({ className = "" }: CreateTabProps) {
         );
         
         if (statsData) {
-          // Update the bitling with the generated data
-          // Convert string types to BitlingType enum values
-          const validatedTypes = statsData.types.map(type => {
-            // Ensure the type is lowercase and a valid BitlingType
-            const lowerType = type.toLowerCase() as BitlingType;
-            return lowerType;
-          });
-          
-          setBitling((prev) => ({ 
-            ...prev, 
-            types: validatedTypes,
-            stats: statsData.stats,
-            moves: statsData.moves,
-            description: statsData.description,
-            behavior: statsData.behavior
-          }));
+          try {
+            // Defensive programming - check each property exists
+            const types = Array.isArray(statsData.types) ? statsData.types : ["normal", "normal"];
+            const validatedTypes = types.map(type => {
+              // Ensure the type is lowercase and a valid BitlingType
+              return (typeof type === 'string' ? type.toLowerCase() : "normal") as BitlingType;
+            });
+            
+            const stats = statsData.stats || { hp: 40, attack: 40, defense: 40, speed: 40 };
+            const moves = Array.isArray(statsData.moves) ? statsData.moves : [];
+            const description = statsData.description || "A mysterious creature";
+            const behavior = statsData.behavior || "Behaves cautiously in the wild";
+            
+            setBitling((prev) => ({ 
+              ...prev, 
+              types: validatedTypes,
+              stats: stats,
+              moves: moves,
+              description: description,
+              behavior: behavior
+            }));
+            
+            console.log("Type data assigned successfully:", validatedTypes);
+          } catch (error) {
+            console.error("Error processing stats data:", error);
+            // Set default values
+            setBitling((prev) => ({ 
+              ...prev, 
+              types: ["normal" as BitlingType, "normal" as BitlingType],
+              stats: { hp: 40, attack: 40, defense: 40, speed: 40 },
+              moves: [],
+              description: "A mysterious creature",
+              behavior: "Behaves cautiously in the wild"
+            }));
+          }
           
           toast({
             title: "Bitling Complete!",
-            description: `Created a ${statsData.types[0]} type Bitling with unique abilities!`,
+            description: `Created a ${Array.isArray(statsData.types) && statsData.types.length > 0 ? 
+              statsData.types[0] : "mysterious"} type Bitling with unique abilities!`,
           });
         }
       }

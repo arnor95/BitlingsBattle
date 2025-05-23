@@ -132,7 +132,77 @@ For moves, specify:
       });
       
       const content = response.choices[0]?.message?.content || '{}';
-      const result = JSON.parse(content);
+      let result;
+      
+      try {
+        result = JSON.parse(content);
+        
+        // Ensure we have minimum valid data structure
+        if (!result.types || !Array.isArray(result.types) || result.types.length === 0) {
+          result.types = ["normal", "normal"];
+        }
+        
+        if (!result.stats) {
+          result.stats = {
+            hp: 40,
+            attack: 40,
+            defense: 40,
+            speed: 40
+          };
+        }
+        
+        if (!result.moves || !Array.isArray(result.moves)) {
+          result.moves = [
+            {
+              name: "Tackle",
+              type: "normal",
+              power: 40,
+              accuracy: 100,
+              pp: 35,
+              maxPp: 35,
+              description: "A physical attack in which the user charges and slams into the target with its whole body.",
+              category: "physical",
+              levelLearned: 1
+            }
+          ];
+        }
+        
+        if (!result.description) {
+          result.description = "A mysterious creature with unknown origins.";
+        }
+        
+        if (!result.behavior) {
+          result.behavior = "Behaves cautiously around strangers but is friendly once it trusts you.";
+        }
+      } catch (error) {
+        console.error("Error parsing AI response:", error);
+        // Provide defaults in case of parsing error
+        result = {
+          types: ["normal", "normal"],
+          stats: {
+            hp: 40,
+            attack: 40,
+            defense: 40,
+            speed: 40
+          },
+          moves: [
+            {
+              name: "Tackle",
+              type: "normal",
+              power: 40,
+              accuracy: 100,
+              pp: 35,
+              maxPp: 35,
+              description: "A physical attack in which the user charges and slams into the target with its whole body.",
+              category: "physical",
+              levelLearned: 1
+            }
+          ],
+          description: "A mysterious creature with unknown origins.",
+          behavior: "Behaves cautiously around strangers but is friendly once it trusts you."
+        };
+      }
+      
       res.json(result);
     } catch (error) {
       console.error("Error generating stats:", error);
