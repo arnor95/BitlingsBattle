@@ -1,0 +1,116 @@
+Overview
+Bitlings is a web-based creature collection game inspired by Pokémon. Players can play the game directly on the site and also generate custom monsters ("Bitlings") using GPT image tools. Users vote on their favorite Bitlings, and selected ones are integrated into the game world with AI-generated stats and abilities.
+
+Functional Requirements
+1. Game Module (Playable on Web)
+Browser-based gameplay with exploration, battling, and collecting Bitlings.
+
+Real-time or turn-based battle system.
+
+Monster catching, leveling, and training mechanics.
+
+Simple inventory and Bitling management system.
+
+2. Bitling Generation
+Interface for users to prompt GPT-4 Vision (DALL·E-style) to generate Bitlings.
+
+Prompt guidance system to help users create viable monster descriptions.
+
+3. Bitling Voting System
+Gallery page of user-generated Bitlings.
+
+Users can upvote or downvote Bitlings.
+
+Weekly/monthly top Bitlings leaderboard.
+
+4. AI Integration for Stats and Abilities
+Upon reaching a voting threshold, trigger a GPT-4 call to:
+
+Generate Type(s) (e.g., Fire, Psychic)
+
+Assign 4 named and described attack moves
+
+Generate base stats (HP, Attack, Defense, Speed, etc.)
+
+5. Bitling Database
+Store image, name, creator handle (optional), type(s), stats, and abilities.
+
+Mark status: “Proposed”, “Voting”, “Accepted”, “In Game”.
+
+6. Frontend Web Application
+Responsive design with two main tabs:
+
+"Play Bitlings" – embed game client
+
+"Create & Vote Bitlings" – for generation and voting
+
+Allow creator credit via Twitter/X handle (non-authenticated)
+
+Non-Functional Requirements
+High availability and performance during peak voting times.
+
+Scalable image hosting for user-generated Bitlings.
+
+GPT API integration (images and text).
+
+Secure API endpoints and content moderation (image filter).
+
+📐 Design Document: Bitlings Platform
+1. System Architecture
+scss
+Copy
+Edit
+User (Web) ⇄ Web App (Next.js or React) ⇄ Backend (Node.js/Express or Supabase Edge Functions)
+                     ⇅                          ⇅
+            GPT-4 Vision (Image)         GPT-4 Turbo (Stats/Abilities)
+                     ⇅                          ⇅
+                Image CDN                 Bitling Database (Postgres/Supabase)
+2. API Endpoints
+POST /api/generate-bitling
+Request: { prompt: string }
+
+Response: { imageUrl: string, promptId: string }
+
+POST /api/generate-bitling-stats
+Request: { imageUrl: string, name: string }
+
+Response: { type: string[], stats: object, moves: object[] }
+
+GET /api/bitlings
+Query by status: ?status=voting|accepted
+
+Returns paginated Bitlings list
+
+POST /api/vote
+Request: { bitlingId: string, vote: 1 | -1 }
+
+3. Database Tables
+Bitlings
+Field	Type	Notes
+id	UUID	Primary key
+name	Text	User-suggested name
+imageUrl	Text	URL to generated image
+creatorHandle	Text	Optional user attribution (X)
+prompt	Text	Original prompt
+status	Enum	Proposed, Voting, Accepted, InGame
+votes	Integer	Total vote score
+createdAt	Timestamp	
+
+BitlingStats
+Field	Type	Notes
+bitlingId	UUID	FK to Bitlings
+types	Text[]	e.g., ["Water", "Ghost"]
+stats	JSON	HP, Attack, Defense, Speed
+moves	JSON	4 named moves with details
+
+4. UI/UX Components
+Game Embed Tab: Iframe or WebGL embed with minimal controls.
+
+Bitling Generator: Prompt form + image preview + confirm submit.
+
+Voting Gallery: Infinite scroll gallery with vote buttons.
+
+Leaderboard: Sort by top voted Bitlings.
+
+Detail View: Click to see Bitling stats, type, moves.
+
